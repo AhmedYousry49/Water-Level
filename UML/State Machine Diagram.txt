@@ -1,0 +1,16 @@
+@startuml
+[*] --> Idle: Application Start
+
+state "Idle" as Idle
+state "Attempting Connection" as Attempting
+state "Connected" as Connected
+state "Error" as ErrorState
+
+Idle --> Attempting: autoConnectTimer triggers
+Attempting --> Connected: connectionSuccess
+Attempting --> ErrorState: connectionFail
+
+ErrorState --> Idle: userRetry
+Connected --> Idle: userDisconnect
+
+@enduml

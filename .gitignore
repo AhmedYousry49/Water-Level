@@ -10,6 +10,12 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+bin/*
+build/*
+.gradle/*
+# Uncomment this line if you have secrets in your projec
+
+
 # Package Files #
 *.jar
 *.war

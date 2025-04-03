@@ -1,0 +1,18 @@
+@startuml
+skinparam componentStyle uml2
+
+' Define the embedded device (Raspberry Pi)
+node "Raspberry Pi" {
+    component "JavaFX Application\n(Serial Communication)" as App
+    component "Device Driver" as Driver
+}
+
+' Define the external device node (Motor Controller)
+node "Motor Controller" {
+    component "Motor Control Module" as Motor
+}
+
+' Define network or connection relationships
+App --> Driver : sends/receives serial data
+Driver --> Motor : issues motor control commands
+@enduml

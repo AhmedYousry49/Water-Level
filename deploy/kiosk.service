@@ -1,0 +1,15 @@
+[Unit]
+Description=JavaFX Kiosk App
+Wants=graphical.target
+After=graphical.target
+
+[Service]
+Environment="DISPLAY=:0"
+Type=simple
+User=ahmed
+WorkingDirectory=/home/ahmed
+ExecStart=/home/ahmed/start-kiosk.sh
+Restart=on-failure
+
+[Install]
+WantedBy=graphical.target

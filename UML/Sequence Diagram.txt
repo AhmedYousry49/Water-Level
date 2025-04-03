@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant "UI Controller" as UI
+participant "SerialModel" as SM
+participant "AutoConnect Timer" as AT
+participant "Error Screen" as ES
+
+' The application auto-initiates connection when started
+UI -> AT: startAutoConnectTimer()
+AT -> SM: attemptAutoConnect()
+activate SM
+SM -> SM: Try open serial port
+alt Connection Successful
+    SM -> UI: autoConnectionSuccess()
+    UI -> User: Display main screen
+else Connection Failed
+    SM -> UI: autoConnectionFailed()
+    UI -> ES: displayError("Auto Connect Failed")
+    note right of UI: Auto connection attempt failed.\nPlease check the serial connection manually.
+end
+deactivate SM
+
+@enduml

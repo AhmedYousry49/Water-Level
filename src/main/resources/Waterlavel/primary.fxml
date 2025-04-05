@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox prefHeight="449.0" prefWidth="800.0" spacing="20" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom, #e6f7ff, #b3e0ff);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Waterlavel.PrimaryController">
+
+    <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="WATER TANK MONITORING SYSTEM">
+        <effect>
+            <DropShadow color="rgba(255,255,255,0.7)" radius="2" spread="0.5" />
+        </effect>
+    </Label>
+
+    <HBox alignment="CENTER" spacing="40">
+        <!-- 3D Tank Visualization -->
+        <StackPane minHeight="320" minWidth="220">
+            <Rectangle arcHeight="15" arcWidth="15" fill="linear-gradient(to right, #ecf0f1, #bdc3c7)" height="300" stroke="#2c3e50" strokeWidth="2" width="160" StackPane.alignment="CENTER" />
+            <Ellipse fill="linear-gradient(to right, #95a5a6, #7f8c8d)" radiusX="80" radiusY="15" stroke="#2c3e50" strokeWidth="1" style="-fx-translate-y: -150;" />
+<AnchorPane fx:id="tankContainer" prefHeight="0" prefWidth="156" style="-fx-background-color: transparent;">
+    <Rectangle fx:id="waterFill" arcHeight="15" arcWidth="15" fill="linear-gradient(to bottom, #3498db, #2980b9)" height="278.0" layoutX="29.0" layoutY="44.0" width="162.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.0" />
+   
+   
+               <AnchorPane layoutX="1.0" layoutY="44.0" />
+</AnchorPane>
+        </StackPane>
+
+        <!-- Control Panel -->
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 15; -fx-border-color: #88c9ff; -fx-border-radius: 15; -fx-border-width: 2;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="WATER LEVEL:" />
+                <ProgressBar fx:id="waterLevelBar" prefWidth="200" progress="0.0" style="-fx-accent: #66b3ff;" />
+                <Label fx:id="waterLevelPercent" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="0%" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="TANK STATUS:" />
+                <Circle fx:id="statusIndicator" fill="#3d904b" radius="7" />
+                <Label fx:id="statusText" style="-fx-font-weight: bold;" text="Low" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="PUMP STATUS:" />
+                <Label fx:id="pumpStatus" prefHeight="16.0" prefWidth="64.0" style="-fx-font-weight: bold; -fx-text-fill: green;" text="ON" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="LAST UPDATE:" />
+                <Label fx:id="lastUpdate" text="2025-03-24 09:45:22" />
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="20" style="-fx-padding: 15 0 0 0;">
+                <RadioButton fx:id="manualRadio" text="Manual">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="modeToggleGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="autoRadio" text="Automatic" toggleGroup="$modeToggleGroup" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="MANUAL PUMP STATUS:" />
+                <Button fx:id="pumpOnBtn" prefWidth="60" style="-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="ON" />
+                <Button fx:id="pumpOffBtn" prefWidth="60" style="-fx-background-color: #b30000; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="OFF" />
+            </HBox>
+
+            <Button fx:id="emergencyStopBtn" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" text="EMERGENCY STOP" />
+        </VBox>
+    </HBox>
+</VBox>

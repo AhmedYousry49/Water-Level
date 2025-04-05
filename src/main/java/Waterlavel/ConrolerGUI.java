@@ -28,6 +28,8 @@ public class ConrolerGUI extends Application {
         stage.setFullScreenExitHint("");  // Remove "Press ESC to exit full screen"
         stage.setResizable(false);  
         stage.show();
+
+
     }
 
     public static void main(String[] args) {

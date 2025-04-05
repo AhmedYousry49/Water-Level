@@ -1,5 +1,6 @@
 package Waterlavel;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -7,6 +8,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class PrimaryController {
+
+    private final SerialPortManager serialManager = new SerialPortManager();
+
 
     @FXML private Rectangle waterFill;
     @FXML private ProgressBar waterLevelBar;
@@ -35,6 +39,30 @@ public class PrimaryController {
         modeToggleGroup.selectToggle(manualRadio);
         updateUI(1); // Start at 0%
         setupListeners();
+
+        //   boolean opened = serialManager.openPort("/dev/ttyS0", 9600);
+        // if (!opened) {
+        //     outputArea.appendText("Failed to open /dev/ttyS0\n");
+        //     return;
+        // }
+
+        // // Register a data listener (Observer)
+        // serialManager.setDataListener(data -> {
+        //     // This runs in background thread, so update UI on FX thread
+        //     Platform.runLater(() -> {
+        //         outputArea.appendText("Received: " + data);
+        //     });
+        // });
+
+        // // Handle Send button click
+        // sendButton.setOnAction(event -> {
+        //     String text = inputField.getText();
+        //     if (!text.isEmpty()) {
+        //         serialManager.sendData(text + "\n");
+        //         inputField.clear();
+        //     }
+        // });
+    
     }
 
     private void setupListeners() {

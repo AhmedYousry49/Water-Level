@@ -13,12 +13,12 @@ echo 'Starting javaFX...' >> $LOGFILE 2>&1
 
 /opt/jdk/bin/java \
   -Degl.displayid=/dev/dri/card0 \
-  -Dmonocle.egl.lib=/usr/lib/jvm/openjfx-22/javafx-sdk-22/lib/libgluon_drm-1.1.7.so \
-  -Djava.library.path=/usr/lib/jvm/openjfx-22/javafx-sdk-22/lib/ \
+  -Dmonocle.egl.lib=/home/ahmed/Downloads/pi4j-example-fxgl/download/openjfx/extracted_files/openjfx/lib/libgluon_drm-1.1.7.so \
+  -Djava.library.path=/home/ahmed/Downloads/pi4j-example-fxgl/download/openjfx/extracted_files/openjfx/lib/  \
   -Dmonocle.platform.traceConfig=false \
   -Dprism.verbose=false \
   -Djavafx.verbose=false \
   -Dmonocle.platform=EGL \
-  --module-path /usr/lib/jvm/openjfx-22/javafx-sdk-22/lib/ \
+  --module-path /home/ahmed/Downloads/pi4j-example-fxgl/download/openjfx/extracted_files/openjfx/lib/ \
   --add-modules javafx.controls,javafx.fxml \
   -jar /home/ahmed/WaterLevel.jar  >> $LOGFILE 2>&1

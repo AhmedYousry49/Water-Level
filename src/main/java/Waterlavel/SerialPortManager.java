@@ -7,22 +7,22 @@ import java.io.OutputStream;
 import java.util.function.Consumer;
 
 public class SerialPortManager {
+
     private SerialPort serialPort;
     private Consumer<String> dataListener;
+    StringBuilder buffer ;
 
-    /**
-     * Opens the serial port with the given name and baud rate.
-     *
-     * @param portName e.g., "/dev/ttyS0" or "COM3"
-     * @param baudRate e.g., 9600
-     * @return true if port opened successfully, false otherwise
-     */
+
     public boolean openPort(String portName, int baudRate) {
+        buffer = new StringBuilder();
+
         serialPort = SerialPort.getCommPort(portName);
+
         serialPort.setComPortParameters(baudRate, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);
 
         if (serialPort.openPort()) {
+
             serialPort.addDataListener(new SerialPortDataListener() {
                 @Override
                 public int getListeningEvents() {
@@ -31,12 +31,24 @@ public class SerialPortManager {
 
                 @Override
                 public void serialEvent(SerialPortEvent event) {
+
                     if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
-                    byte[] buffer = new byte[serialPort.bytesAvailable()];
-                    int numRead = serialPort.readBytes(buffer, buffer.length);
-                    if (numRead > 0 && dataListener != null) {
-                        String received = new String(buffer, 0, numRead);
-                        dataListener.accept(received); // Observer notification
+
+                    byte[] data = new byte[ serialPort.bytesAvailable() ];
+
+                    serialPort.readBytes(data, data.length);
+                
+                    String received = new String(data);
+
+                    buffer.append(received);
+                
+                    int index;
+                    while ((index = buffer.indexOf("\n")) != -1) {
+                        String completeLine = buffer.substring(0, index).trim(); 
+                        
+                        buffer.delete(0, index + 1);
+
+                        if (dataListener != null) dataListener.accept(completeLine);
                     }
                 }
             });
@@ -45,9 +57,7 @@ public class SerialPortManager {
         return false;
     }
 
-    /**
-     * Closes the currently opened serial port.
-     */
+    
     public void closePort() {
         if (serialPort != null && serialPort.isOpen()) {
             serialPort.removeDataListener();
@@ -55,11 +65,7 @@ public class SerialPortManager {
         }
     }
 
-    /**
-     * Sends a string of data over the serial port.
-     *
-     * @param data The string to send (add '\n' if required by your device)
-     */
+  
     public void sendData(String data) {
         try {
             OutputStream out = serialPort.getOutputStream();
@@ -70,11 +76,7 @@ public class SerialPortManager {
         }
     }
 
-    /**
-     * Sets the listener that will be called when data is received.
-     *
-     * @param listener A Consumer that accepts received strings
-     */
+   
     public void setDataListener(Consumer<String> listener) {
         this.dataListener = listener;
     }

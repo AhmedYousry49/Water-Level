@@ -10,8 +10,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-     implementation 'com.fazecast:jSerialComm:2.7.0'  // Adjust version as necessary
-
+    implementation 'com.fazecast:jSerialComm:2.7.0'  // Adjust version as necessary
     runtimeOnly "org.openjfx:javafx-base:17:linux-aarch64"
     runtimeOnly "org.openjfx:javafx-controls:17:linux-aarch64"
     runtimeOnly "org.openjfx:javafx-graphics:17:linux-aarch64"

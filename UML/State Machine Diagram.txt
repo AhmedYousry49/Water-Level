@@ -1,16 +1,30 @@
 @startuml
-[*] --> Idle: Application Start
+[*] --> Disconnected
 
-state "Idle" as Idle
-state "Attempting Connection" as Attempting
-state "Connected" as Connected
-state "Error" as ErrorState
+Disconnected --> Connected : Open Port
+Connected --> Disconnected : Close Port
+Connected --> Synchronizing : SYNC Sent
+Synchronizing --> Connected : SYNC Acknowledged
+Synchronizing --> Disconnected : Timeout
 
-Idle --> Attempting: autoConnectTimer triggers
-Attempting --> Connected: connectionSuccess
-Attempting --> ErrorState: connectionFail
+Connected --> WaterLevelRequest : Request Water Level
+WaterLevelRequest --> WaterLevelReceived : Water Level Data Received
+WaterLevelReceived --> Connected : Process Data
 
-ErrorState --> Idle: userRetry
-Connected --> Idle: userDisconnect
+Connected --> MotorStatusRequest : Request Motor Status
+MotorStatusRequest --> MotorStatusReceived : Motor Status Data Received
+MotorStatusReceived --> Connected : Process Data
+
+WaterLevelReceived --> Monitoring : Water Level OK (Auto Mode)
+WaterLevelReceived --> PumpOn : Water Level Low (Manual Mode)
+Monitoring --> PumpOn : Water Level Low (Auto Mode)
+Monitoring --> PumpOff : Water Level Full (Auto Mode)
+
+PumpOn --> Pumping : Pumping Water
+Pumping --> Monitoring : Water Level Full or Emergency Stop
+Pumping --> EmergencyStop : Emergency Stop Button Pressed
+PumpOff --> Monitoring : Manual Control or Auto Mode
+
+EmergencyStop --> Monitoring : Return to Monitoring State
 
 @enduml

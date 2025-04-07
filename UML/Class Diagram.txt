@@ -1,0 +1,81 @@
+@startuml
+
+' Define SerialPortManager class
+class SerialPortManager {
+    - SerialPort serialPort
+    - Consumer<String> dataListener
+    - StringBuilder buffer
+    + boolean openPort(String portName, int baudRate)
+    + void closePort()
+    + void sendData(String data)
+    + void setDataListener(Consumer<String> listener)
+}
+
+' Define PrimaryController class
+class PrimaryController {
+    - SerialPortManager serialManager
+    - ScheduledExecutorService scheduler
+    - volatile long lastResponseTime
+    - static final long TIMEOUT_MS
+    - volatile long lastWaterlevelTime
+    - static final long READWATERLEVEL_MS
+    - volatile long lastMoterstatusTime
+    - static final long READMOTORSTATUS_MS
+    - boolean pumpRunning
+    - boolean emergencyStopped
+    + void initialize()
+    + void setDerviceStatus(boolean status)
+    + void showMessageBox(String message)
+    + void exexcuteCommand(String commString)
+    + void setupListeners()
+    + void handlePumpOn()
+    + void handlePumpOff()
+    + void handleEmergencyStop()
+    + void handleManualSelected()
+    + void handleAutoSelected()
+    + void updateUI(int level)
+    + void updateWaterLevel(double percentage)
+    + void updateTankStatus(String status, Color color)
+    + void updateDeviceStatus(String status, Color color)
+    + void setPumpStatus(boolean running)
+    + void processSensorInput(String input)
+}
+
+' Define SerialPort class (from com.fazecast.jSerialComm)
+class SerialPort {
+    + static SerialPort getCommPort(String portName)
+    + boolean openPort()
+    + void closePort()
+    + boolean isOpen()
+    + OutputStream getOutputStream()
+    + int bytesAvailable()
+    + void readBytes(byte[] data, int length)
+    + void addDataListener(SerialPortDataListener listener)
+    + void removeDataListener()
+}
+
+' Define SerialPortDataListener interface
+interface SerialPortDataListener {
+    + int getListeningEvents()
+    + void serialEvent(SerialPortEvent event)
+}
+
+' Define SerialPortEvent class
+class SerialPortEvent {
+    + int getEventType()
+}
+
+' Define SerialPortEvent constants
+enum SerialPortEventType {
+    LISTENING_EVENT_DATA_AVAILABLE
+}
+
+' Define connection between classes
+SerialPortManager "1" *-- "1" SerialPort : manages
+PrimaryController "1" *-- "1" SerialPortManager : uses
+SerialPort "1" *-- "*" SerialPortDataListener : notifies
+
+' Define associations
+PrimaryController "1" *-- "*" ScheduledExecutorService : schedules
+
+@enduml

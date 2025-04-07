@@ -1,23 +1,39 @@
 @startuml
-actor User
-participant "UI Controller" as UI
-participant "SerialModel" as SM
-participant "AutoConnect Timer" as AT
-participant "Error Screen" as ES
 
-' The application auto-initiates connection when started
-UI -> AT: startAutoConnectTimer()
-AT -> SM: attemptAutoConnect()
-activate SM
-SM -> SM: Try open serial port
-alt Connection Successful
-    SM -> UI: autoConnectionSuccess()
-    UI -> User: Display main screen
-else Connection Failed
-    SM -> UI: autoConnectionFailed()
-    UI -> ES: displayError("Auto Connect Failed")
-    note right of UI: Auto connection attempt failed.\nPlease check the serial connection manually.
-end
-deactivate SM
+actor User
+participant "PrimaryController" as PC
+participant "SerialPortManager" as SPM
+participant "SerialPort" as SP
+participant "ScheduledExecutorService" as SES
+
+User -> PC : Start Application
+PC -> SPM : openPort("/dev/ttyS0", 115200)
+SPM -> SP : getCommPort("/dev/ttyS0")
+SP -> SP : openPort()
+SP -> SPM : return success
+PC -> SES : schedule periodic task
+SES -> SES : schedule task to read water level and motor status
+PC -> SPM : sendData("SYNC\r\n")
+SPM -> SP : writeBytes("SYNC\r\n")
+SP -> SPM : return ACK
+PC -> SPM : sendData("WATERLEVEL\r\n")
+SPM -> SP : writeBytes("WATERLEVEL\r\n")
+SP -> SPM : return data ("WATER[700]")
+SPM -> PC : dataListener("WATER[700]")
+PC -> PC : processWaterLevelData("WATER[700]")
+PC -> PC : updateUI(1)
+PC -> SPM : sendData("MOTORINFO\r\n")
+SPM -> SP : writeBytes("MOTORINFO\r\n")
+SP -> SPM : return data ("MOTOR[1]")
+SPM -> PC : dataListener("MOTOR[1]")
+PC -> PC : processMotorStatusData("MOTOR[1]")
+PC -> PC : updatePumpStatus(true)
+
+== Periodic Sync ==
+
+SES -> PC : execute periodic task (every 1 second)
+PC -> SPM : sendData("SYNC\r\n")
+SPM -> SP : writeBytes("SYNC\r\n")
+SP -> SPM : return ACK
 
 @enduml
